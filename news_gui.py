@@ -2,6 +2,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from logic import get_selected_news, get_news_data
+from PIL import Image, ImageTk
+import os
 class NewsGUI:
     def __init__(self, root, show_main_menu):
         self.root = root
@@ -56,7 +58,7 @@ class NewsGUI:
         if selected_item:
             selected_news = get_selected_news(get_news_data(), self.treeview.index(selected_item))
             if selected_news:
-                NewsInfoPopup(self.root, selected_news).run()
+                NewsInfoPopup(self.root, selected_news, self.treeview, selected_item).run()
             else:
                 messagebox.showwarning("Błąd", "Wybierz newsa z listy.")
         else:
@@ -74,19 +76,53 @@ class NewsGUI:
         self.show_main_menu()
 
 class NewsInfoPopup:
-    def __init__(self, root, news_info):
+    def __init__(self, root, news_info, treeview, selected_item):
         self.root = root
         self.news_info = news_info
+        self.treeview = treeview
+        self.selected_item = selected_item
+
 
         self.popup = tk.Toplevel(root)
         self.popup.title(news_info.get("Tytuł", "Brak tytułu"))
 
         # Ustaw większą szerokość dla okna popup
-        self.popup.geometry("600x400")
+        self.popup.geometry("800x600")
+
+        self.popup.resizable(False, False)
+
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+
+        x_position = (screen_width - 800) // 2
+        y_position = (screen_height - 600) // 2
+
+        self.popup.geometry(f"800x600+{x_position}+{y_position}")
+
+        image_path = f"news_imgs/news_{self.treeview.index(self.selected_item) + 1}.png"
+        if os.path.exists(image_path):
+            image = Image.open(image_path)
+            image = image.resize((500, 200), Image.BICUBIC)
+            photo = ImageTk.PhotoImage(image)
+
+            # Tworzenie etykiety do wyświetlenia zdjęcia
+            image_label = tk.Label(self.popup, image=photo)
+            image_label.image = photo
+            image_label.pack(padx=10, pady=10)
 
         # Tworzenie etykiety do wyświetlenia treści
-        content_label = tk.Label(self.popup, text=news_info.get("Tresc", "Brak treści"), wraplength=550, justify="left", font=("Helvetica", 12))
-        content_label.pack(padx=10, pady=10)
+        content_text = tk.Text(self.popup, wrap="word", font=("Helvetica", 12))
+        content_text.insert(tk.END, news_info.get("Treść", "Brak treści"))
+        content_text.config(state=tk.DISABLED)
+        content_text.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+        # Dodanie pionowej Scrollbar
+        scrollbar = tk.Scrollbar(self.popup, command=content_text.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        content_text.config(yscrollcommand=scrollbar.set)
+
+        close_button = tk.Button(self.popup, text="Zamknij", command=self.popup.destroy)
+        close_button.pack(pady=10)
 
     def run(self):
         self.root.wait_window(self.popup)

@@ -4,6 +4,7 @@ import json
 import requests
 import bcrypt
 import random
+import os
 # LOGIC FOR JSON LOADING INTO APP
 
 def load_info(path):
@@ -94,8 +95,9 @@ def get_selected_league_info(selected_row, top_european_leagues_info):
 # LOGIC FOR ACTIVE MATCHES DISPLAY:
 
 def get_active_matches():
+    apikey = os.environ.get('apikey')
     uri = 'https://api.football-data.org/v4/matches'
-    headers = {'X-Auth-Token': '85fb8206e47442b38dfb484ba39522cf'}
+    headers = {'X-Auth-Token': apikey}
     response = requests.get(uri, headers=headers)
     data = response.json()
 

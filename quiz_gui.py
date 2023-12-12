@@ -10,7 +10,7 @@ class QuizGUI:
         self.show_main_menu = show_main_menu
 
         self.style = ttk.Style(self.root)
-        self.style.configure("Quiz.TFrame", foreground="#ecf0f1")  # Set background color using style
+        self.style.configure("Quiz.TFrame", foreground="#ecf0f1", background='light blue')  # Set background color using style
 
         self.quiz_frame = ttk.Frame(self.root, style="Quiz.TFrame")  # Use the configured style
         self.quiz_frame.place(relx=0.5, rely=0.5, anchor="center")
@@ -109,6 +109,7 @@ class QuizGUI:
         result_label = tk.Label(result_window, text=f"Twój wynik ({quiz_name}): {score}/{total_questions}", font=("Helvetica", 14, "bold"))
         result_label.pack(pady=20)
 
+
         percentage = score / total_questions * 100
         meter = ttb.Meter(
             result_window,
@@ -130,7 +131,8 @@ class QuizGUI:
         x = (result_window.winfo_screenwidth() - width) // 2
         y = (result_window.winfo_screenheight() - height) // 2
         result_window.geometry(f"{width}x{height}+{x}+{y}")
-
+        
+        result_window.resizable(False, False)
         result_window.wait_window(result_window)
 
     def display_quiz_results(self):
@@ -142,15 +144,37 @@ class QuizGUI:
 
         quiz_results = read_quiz_results_from_db(self.user_id)
 
+        ovr_score = 0
         for result in quiz_results[-5:]:
             quiz_name, score = result
+            ovr_score += score
             result_text = f"{quiz_name}: {score}/5"
             result_label = tk.Label(result_window, text=result_text, font=("Helvetica", 12))
             result_label.pack()
 
+        ovr_percentage = ovr_score / 25 * 100
+        ovr_meter = ttb.Meter(
+            result_window,
+            metersize=200,
+            padding=20,
+            amountused=ovr_percentage,
+            amounttotal=100,
+            textright="%",
+            metertype = "semi",
+            )
+        ovr_meter.pack()
+
         confirm_button = tk.Button(result_window, text="OK", command=result_window.destroy)
         confirm_button.pack(pady=10)
 
+        result_window.update_idletasks()
+        width = result_window.winfo_width()
+        height = result_window.winfo_height()
+        x = (result_window.winfo_screenwidth() - width) // 2
+        y = (result_window.winfo_screenheight() - height) // 2
+        result_window.geometry(f"{width}x{height}+{x}+{y}")
+        
+        result_window.resizable(False, False)
         result_window.wait_window(result_window)
 
     def destroy_and_show_main_menu(self):

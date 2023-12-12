@@ -11,7 +11,7 @@ class MatchesGUI:
         self.matches_frame = ttk.Frame(self.root)
         self.matches_frame.place(relx=0.5, rely=0.5, anchor="center")
 
-        self.canvas = tk.Canvas(self.matches_frame, bg="#ecf0f1", width=600, height=400, highlightthickness=0)
+        self.canvas = tk.Canvas(self.matches_frame, bg="#ecf0f1", width=400, height=200, highlightthickness=0)
         self.canvas.pack(pady=20)
 
         ttk.Button(self.matches_frame, text="🔍 Pobierz Mecze", command=self.show_active_matches).pack(pady=10)

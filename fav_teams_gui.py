@@ -20,6 +20,11 @@ class FavTeamsGUI:
         self.teams_frame = ttk.Frame(self.root, style="Teams.TFrame")
         self.teams_frame.place(relx=0.5, rely=0.5, anchor="cente")
 
+        self.style.configure("green.TFrame", background="green")
+        self.style.configure("yellow.TFrame", background="yellow")
+        self.style.configure("red.TFrame", background="red")
+
+
         self.selected_row_favorite_teams = 0
         self.selected_row_team = 0
         self.rows_per_page = 15
@@ -96,6 +101,8 @@ class FavTeamsGUI:
 
         results_data = get_last_results(self.user_id)
 
+        style = ttk.Style()
+
         if isinstance(results_data, str):
             result_label = ttk.Label(self.teams_frame, text=results_data)
             result_label.grid(row=3, column=1, pady=10)
@@ -104,17 +111,19 @@ class FavTeamsGUI:
             team_name_label.grid(row=3, column=1, pady=5)
 
             for i, result in enumerate(results_data["results"], start=1):
-                outcome_color = "green" if result["color"] == "RED" else "red"
-                if result["color"] == "YELLOW":
-                    outcome_color = "yellow"
+                outcome_color = 'green' if result['outcome'] == 'WINNER' else 'red' if result['outcome'] == 'LOSER' else 'yellow'
+                style.configure(f"Outcome.{outcome_color}.TFrame", background=outcome_color)
 
-                self.style.configure(f"ResultLabel{i}.TLabel", foreground=outcome_color)
-                result_label = ttk.Label(self.teams_frame, text=f"{result['opponent']}: {result['score']} ({result['outcome']})", style=f"ResultLabel{i}.TLabel")
+                result_frame = ttk.Frame(self.teams_frame, style=f"Outcome.{outcome_color}.TFrame")
+                result_frame.grid(row=i + 3, column=1, pady=5)
+
+                result_label = ttk.Label(result_frame, text=f"{result['opponent']}: {result['score']} ({result['outcome']})", background = outcome_color, font = ("Helvetica", 14, "bold"))
                 result_label.grid(row=i + 3, column=1, pady=5)
 
         self.style.configure("BackButton.TButton", background="#e74c3c", font=("Helvetica", 10, "bold"))
         back_button = ttk.Button(self.teams_frame, text="Powrót", command=self.display_favorite_teams_menu, style="BackButton.TButton")
         back_button.grid(row=5 + len(results_data["results"]), column=1, pady=5)
+
 
     def clear_frame(self):
         for widget in self.teams_frame.winfo_children():
@@ -126,6 +135,6 @@ class FavTeamsGUI:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    user_id = "example_user_id"  # Replace with actual user_id
+    user_id = None 
     app = FavTeamsGUI(root, user_id)
     root.mainloop()
