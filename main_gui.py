@@ -20,7 +20,6 @@ class App:
 
         self.root.geometry("1600x1000")
 
-        # Dodaj obraz do lewej strony
         self.image_path = "img/soccer.png"
         self.image = Image.open(self.image_path)
         self.image = self.image.resize((200, 200), Image.BICUBIC)
@@ -48,12 +47,10 @@ class App:
 
         ttk.Button(self.login_frame, text="Zaloguj", command=self.login, style="TButton").grid(row=2, column=0, columnspan=2, pady=10)
 
-        # Load the icons
         self.facebook_icon = ImageTk.PhotoImage(Image.open('socials/facebook.png'))
         self.linkedin_icon = ImageTk.PhotoImage(Image.open('socials/linkedin.png'))
         self.github_icon = ImageTk.PhotoImage(Image.open('socials/github.png'))
 
-        # Create the buttons
         self.facebook_button = ttk.Button(self.root, image=self.facebook_icon, command=lambda: webbrowser.open('https://www.facebook.com/'), style = "Social.TButton")
         self.facebook_button["style"] = "Social.TButton"
         self.linkedin_button = ttk.Button(self.root, image=self.linkedin_icon, command=lambda: webbrowser.open('https://www.linkedin.com/in/'), style = "Social.TButton" )
@@ -73,7 +70,6 @@ class App:
                              relief="flat",
                              padding=(5, 5))
 
-        # Position the buttons in the footer
         self.facebook_button.place(relx=0.43, rely=0.8)
         self.linkedin_button.place(relx=0.48, rely=0.8)
         self.github_button.place(relx=0.53, rely=0.8)

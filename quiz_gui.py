@@ -10,9 +10,9 @@ class QuizGUI:
         self.show_main_menu = show_main_menu
 
         self.style = ttk.Style(self.root)
-        self.style.configure("Quiz.TFrame", foreground="#ecf0f1", background='light blue')  # Set background color using style
+        self.style.configure("Quiz.TFrame", foreground="#ecf0f1", background='light blue') 
 
-        self.quiz_frame = ttk.Frame(self.root, style="Quiz.TFrame")  # Use the configured style
+        self.quiz_frame = ttk.Frame(self.root, style="Quiz.TFrame")
         self.quiz_frame.place(relx=0.5, rely=0.5, anchor="center")
 
         self.style.configure("Big.TButton", foreground="white", background="#3498db", font=("Helvetica", 14, "bold"))
@@ -46,7 +46,6 @@ class QuizGUI:
             if selected_question < len(quiz_questions):
                 question_var.set(quiz_questions[selected_question]["Pytanie"])
 
-                # Clear only widgets related to the current question
                 for widget in answers_frame.winfo_children():
                     widget.destroy()
                 
@@ -92,11 +91,10 @@ class QuizGUI:
                     score += 1
                 selected_question += 1
 
-            # Clear only widgets related to the current question
                 for widget in answers_frame.winfo_children():
                     widget.destroy()
 
-                confirm_button.destroy()  # Destroy the "Potwierdź" button
+                confirm_button.destroy()
 
                 show_next_question()
 
@@ -184,7 +182,6 @@ class QuizGUI:
 if __name__ == "__main__":
     root = tk.Tk()
     user_id = None
-    # Ustawienie globalnego stylu dla przycisków
     app = QuizGUI(root, user_id)
     root.title("Aplikacja Quizów")
     root.geometry("800x600")

@@ -54,14 +54,12 @@ class MatchesGUI:
         frame.tkraise()
 
     def destroy_and_show_main_menu(self):
-        # Usuń wszystkie widgety z ramki
         for widget in self.matches_frame.winfo_children():
             widget.destroy()
 
-        # Pokaż menu główne
         self.show_main_menu()
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = MatchesGUI(root, None)  # None, ponieważ nie potrzebujemy show_main_menu dla tego przykładu
+    app = MatchesGUI(root, None) 
     root.mainloop()

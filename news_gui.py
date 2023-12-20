@@ -10,9 +10,9 @@ class NewsGUI:
         self.show_main_menu = show_main_menu
 
         self.style = ttk.Style(self.root)
-        self.style.configure("News.TFrame", foreground="#ecf0f1")  # Set background color using style
+        self.style.configure("News.TFrame", foreground="#ecf0f1")
 
-        self.news_frame = ttk.Frame(self.root, style="News.TFrame")  # Use the configured style
+        self.news_frame = ttk.Frame(self.root, style="News.TFrame")
         self.news_frame.place(relx=0.5, rely=0.5, anchor="center")
 
         self.treeview = ttk.Treeview(self.news_frame, columns=("Title", "Author", "Date"), show="headings")
@@ -25,7 +25,6 @@ class NewsGUI:
         ttk.Button(self.news_frame, text="🔍 Pokaż Treść", command=self.show_selected_news, style="Accent.TButton").pack(pady=10)
         ttk.Button(self.news_frame, text="🏠 Menu główne", command=self.destroy_and_show_main_menu, style="Accent.TButton").pack(pady=10)
 
-        # Pobierz aktualności od razu po inicjalizacji
         self.show_news()
 
     def setup_treeview(self):
@@ -40,7 +39,7 @@ class NewsGUI:
         news_data = get_news_data()
 
         if news_data:
-            self.treeview.delete(*self.treeview.get_children())  # Wyczyść poprzednie wpisy
+            self.treeview.delete(*self.treeview.get_children())
 
             for news_item in news_data:
                 title = news_item.get("Tytuł", "")
@@ -68,11 +67,9 @@ class NewsGUI:
         frame.tkraise()
 
     def destroy_and_show_main_menu(self):
-        # Usuń wszystkie widgety z ramki
         for widget in self.news_frame.winfo_children():
             widget.destroy()
 
-        # Pokaż menu główne
         self.show_main_menu()
 
 class NewsInfoPopup:
@@ -86,7 +83,6 @@ class NewsInfoPopup:
         self.popup = tk.Toplevel(root)
         self.popup.title(news_info.get("Tytuł", "Brak tytułu"))
 
-        # Ustaw większą szerokość dla okna popup
         self.popup.geometry("800x600")
 
         self.popup.resizable(False, False)
@@ -105,18 +101,15 @@ class NewsInfoPopup:
             image = image.resize((500, 200), Image.BICUBIC)
             photo = ImageTk.PhotoImage(image)
 
-            # Tworzenie etykiety do wyświetlenia zdjęcia
             image_label = tk.Label(self.popup, image=photo)
             image_label.image = photo
             image_label.pack(padx=10, pady=10)
 
-        # Tworzenie etykiety do wyświetlenia treści
         content_text = tk.Text(self.popup, wrap="word", font=("Helvetica", 12))
         content_text.insert(tk.END, news_info.get("Treść", "Brak treści"))
         content_text.config(state=tk.DISABLED)
         content_text.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
-        # Dodanie pionowej Scrollbar
         scrollbar = tk.Scrollbar(self.popup, command=content_text.yview)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         content_text.config(yscrollcommand=scrollbar.set)
@@ -130,11 +123,10 @@ class NewsInfoPopup:
 if __name__ == "__main__":
     root = tk.Tk()
 
-    # Ustawienie globalnego stylu dla przycisków
     style = ttk.Style(root)
     style.configure("Accent.TButton", foreground="white", background="#3498db", font=("Helvetica", 10, "bold"))
 
-    app = NewsGUI(root, None)  # None, ponieważ nie potrzebujemy show_main_menu dla tego przykładu
+    app = NewsGUI(root, None) 
     root.title("Kreatywna Aplikacja Newsów")
-    root.geometry("1000x600")  # Zwiększ szerokość okna
+    root.geometry("1000x600")
     root.mainloop()
